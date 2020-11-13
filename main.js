@@ -65,13 +65,19 @@ window.AFRAME.registerComponent('cursor-listener', {
 
 window.AFRAME.registerComponent('launch', {
   schema: {
-    speedMetersPerSecond: {type: 'number', default: 1}
+    speedMetersPerSecond: {type: 'number', default: 10},
+  },
+  init: function() {
+    this.speedMetersPerMillisecond = this.data.speedMetersPerSecond / 1000;
+  },
+  update: function() {
+    this.speedMetersPerMillisecond = this.data.speedMetersPerSecond / 1000;
   },
   tick: function (t, deltaSeconds) {
     if (!deltaSeconds) return;
 
     const position = this.el.getAttribute('position');
     position.y += deltaSeconds * this.speedMetersPerMillisecond;
-    this.el.setAttribute('position', 'y', this.data.position.y + deltaSeconds * this.data.speedMetersPerSecond)
+    this.el.setAttribute('position', position)
   }
 });
