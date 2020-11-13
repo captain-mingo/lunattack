@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Moonshot</title>
+    <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
+    <script src="https://unpkg.com/aframe-environment-component/dist/aframe-environment-component.min.js"></script>
+    <script src="https://rawgit.com/mayognaise/aframe-gif-shader/master/dist/aframe-gif-shader.min.js"></script>
+  </head>
+
+  <script src="./main.js"></script>
+  
+  <body>
+    <a-scene
+      environment="preset: starry; dressingAmount: 200; fog: 0;"
+    >
+      <a-assets>
+        <a-asset-item id="rocket-obj" src="https://cdn.glitch.com/73a0fc51-039a-438f-a941-14cacf7b2a19%2Frocket.obj?v=1605072648750"></a-asset-item>
+        <a-asset-item id="rocket-mtl" src="https://cdn.glitch.com/73a0fc51-039a-438f-a941-14cacf7b2a19%2Frocket.mtl?v=1605074050585"></a-asset-item>
+        <a-asset-item id="moon-glb" src="https://cdn.glitch.com/d1fbf3db-dc7f-4c7a-ae4a-e8197da9c8d9%2FMoon_1_3474.glb?v=1605234873430"></a-asset-item>
+        <img id="explosion-gif" src="https://cdn.glitch.com/2eb59503-bc12-4bcd-b902-c37fb2b11e69%2F3iCN.gif?v=1605162284333"/>
+      </a-assets>
+
+      <a-sphere
+        id="center"
+        radius="0.3"
+        position="10 2 0"
+      ></a-sphere>
+      <a-entity id="moon" gltf-model="#moon-glb"></a-entity>
+      <a-entity id="rocket-rig" position="0 0 -100" launch>
+        <a-entity 
+          id="rocket"
+          obj-model="obj: #rocket-obj; mtl: #rocket-mtl;"
+          position="0 0 -100"
+          cursor-listener
+        >
+        </a-entity>
+      </a-entity>
+
+      <a-camera far="400000000">
+        <a-light type="point" position="0 0 0"></a-light>
+        <a-cursor></a-cursor>
+        <a-plane position="-0.1 0.3 -1" width="0.25" height="0.05">
+          <a-text id="distance-text" value="distance: null" color="#000000" position="-0.1 0 0" scale="0.1 0.1"></a-text>
+        </a-plane>
+        <a-plane id="explosion-sprite" position="0 0 1" width="0.75" height="0.75" material="shader: gif; src: #explosion-gif; opacity: .9"></a-plane>
+      </a-camera>
+    </a-scene>
+  </body>
+</html>
