@@ -7,44 +7,57 @@
     <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
     <script src="https://unpkg.com/aframe-environment-component/dist/aframe-environment-component.min.js"></script>
     <script src="https://rawgit.com/mayognaise/aframe-gif-shader/master/dist/aframe-gif-shader.min.js"></script>
+    <script src="https://unpkg.com/aframe-look-at-component@0.8.0/dist/aframe-look-at-component.min.js"></script>
+    <script type="x-shader/x-vertex" id="vertexshader">
+      varying vec2 vUv;
+
+      void main() {
+
+          vUv = uv;
+
+          gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+
+      }
+    </script>
+
+    <script type="x-shader/x-fragment" id="fragmentshader">
+      uniform sampler2D baseTexture;
+      uniform sampler2D bloomTexture;
+
+      varying vec2 vUv;
+
+      void main() {
+
+          gl_FragColor = ( texture2D( baseTexture, vUv ) + vec4( 1.0 ) * texture2D( bloomTexture, vUv ) );
+
+      }
+      </script>
   </head>
 
+  <script src="./laser.js"></script>
+  <script src="./rocket.js"></script>
   <script src="./main.js"></script>
-  
+
   <body>
     <a-scene
       environment="preset: starry; dressingAmount: 200; fog: 0;"
+      random-rockets
     >
+      <a-entity light="type: ambient; color: #BBB"></a-entity>
+      <a-entity light="type: directional; color: #FFF; intensity: 1.0" position="0 -1 0"></a-entity>
       <a-assets>
         <a-asset-item id="rocket-obj" src="https://cdn.glitch.com/73a0fc51-039a-438f-a941-14cacf7b2a19%2Frocket.obj?v=1605072648750"></a-asset-item>
         <a-asset-item id="rocket-mtl" src="https://cdn.glitch.com/73a0fc51-039a-438f-a941-14cacf7b2a19%2Frocket.mtl?v=1605074050585"></a-asset-item>
+        <img id="explosion-gif" crossorigin="anonymous" src="https://cdn.glitch.com/2eb59503-bc12-4bcd-b902-c37fb2b11e69%2F3iCN.gif?v=1605162284333"/>
         <a-asset-item id="moon-glb" src="https://cdn.glitch.com/d1fbf3db-dc7f-4c7a-ae4a-e8197da9c8d9%2FMoon_1_3474.glb?v=1605234873430"></a-asset-item>
-        <img id="explosion-gif" src="https://cdn.glitch.com/2eb59503-bc12-4bcd-b902-c37fb2b11e69%2F3iCN.gif?v=1605162284333"/>
       </a-assets>
 
-      <a-sphere
-        id="center"
-        radius="0.3"
-        position="10 2 0"
-      ></a-sphere>
-      <a-entity id="moon" gltf-model="#moon-glb"></a-entity>
-      <a-entity id="rocket-rig" position="0 0 -100" launch>
-        <a-entity 
-          id="rocket"
-          obj-model="obj: #rocket-obj; mtl: #rocket-mtl;"
-          position="0 0 -100"
-          cursor-listener
-        >
-        </a-entity>
+      <a-entity id="moon" gltf-model="#moon-glb" position="0 6000 -6000" scale="3.5 3.5 3.5">
       </a-entity>
-
-      <a-camera far="400000000">
+      <a-rocket position="0 0 -400"></a-rocket>
+      <a-camera id="camera" far="400000000">
         <a-light type="point" position="0 0 0"></a-light>
-        <a-cursor></a-cursor>
-        <a-plane position="-0.1 0.3 -1" width="0.25" height="0.05">
-          <a-text id="distance-text" value="distance: null" color="#000000" position="-0.1 0 0" scale="0.1 0.1"></a-text>
-        </a-plane>
-        <a-plane id="explosion-sprite" position="0 0 1" width="0.75" height="0.75" material="shader: gif; src: #explosion-gif; opacity: .9"></a-plane>
+        <a-cursor id="cursor"></a-cursor>
       </a-camera>
     </a-scene>
   </body>
