@@ -110,7 +110,6 @@ window.AFRAME.registerComponent("moon-collider", {
       const moon = document.getElementById("moon")
       if(moon) {
         this.data.targets = [document.getElementById("moon-mesh")]
-        console.log(this.data.targets)
       }
     }
 
